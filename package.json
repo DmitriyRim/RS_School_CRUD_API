@@ -1,0 +1,29 @@
+{
+  "name": "rs_school_crud_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:prod": "npx tsc && node dist/index.js",
+    "start:dev": "nodemon"
+  },
+  "nodemonConfig": "nodemon.json",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitriyRim/RS_School_CRUD_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/DmitriyRim/RS_School_CRUD_API/issues"
+  },
+  "homepage": "https://github.com/DmitriyRim/RS_School_CRUD_API#readme",
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
