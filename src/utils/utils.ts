@@ -9,7 +9,6 @@ export const isValidUrl = (method: string, url: string) => {
       parseUrl.length === 4 &&
       parseUrl[3])
   ) {
-    console.log('OK')
     return true;
   }
   return false;
