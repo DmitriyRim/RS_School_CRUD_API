@@ -4,3 +4,8 @@ export type User = {
   age: number;
   hobbies: string[];
 };
+
+export type ServerAnswer = {
+  message: string,
+  statusCode: number
+}
