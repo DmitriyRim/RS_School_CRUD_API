@@ -1,6 +1,37 @@
 import { users } from '../data';
-import { ServerAnswer } from '../types/types';
+import { RequestBody, ServerAnswer, User } from '../types/types';
 import { v4 as uuidv4, validate } from 'uuid';
+
+const errorAnswers = {
+  notFound: {
+    statusCode: 404,
+    message: 'User not found',
+  },
+  invalidUUID: {
+    statusCode: 400,
+    message: 'UserId is invalid (not uuid)',
+  },
+    incorrectData: {
+    statusCode: 400,
+    message: 'Does not contain required fields',
+  },
+};
+
+export const isValidBody = (body: RequestBody): boolean => {
+    const { username, age, hobbies } = body;
+  if (
+    username &&
+    age &&
+    hobbies &&
+    typeof username === 'string' &&
+    typeof age === 'number' &&
+    Array.isArray(hobbies) &&
+    hobbies.every((item) => typeof item === 'string')
+  ) {
+    return true
+  } 
+  return false; 
+}
 
 export const getUsers = (): ServerAnswer => {
   return {
@@ -11,41 +42,25 @@ export const getUsers = (): ServerAnswer => {
 
 export const getUser = (userID: string): ServerAnswer => {
   if (!validate(userID)) {
-    return {
-      statusCode: 400,
-      message: 'UserId is invalid (not uuid)',
-    };
+    return errorAnswers.invalidUUID;
   }
   const user = users.find((user) => user.id === userID);
 
-  return {
-    statusCode: user ? 200 : 404,
-    message: user ? JSON.stringify(user) : 'User not found',
-  };
+  return user
+    ? {
+        statusCode: 200,
+        message: JSON.stringify(user),
+      }
+    : errorAnswers.notFound;
 };
 
-export const createUser = ({
-  username,
-  age,
-  hobbies,
-}: {
-  username?: string;
-  age?: number;
-  hobbies: string[];
-}): ServerAnswer => {
-  if (
-    username &&
-    age &&
-    hobbies &&
-    typeof username === 'string' &&
-    typeof age === 'number' &&
-    Array.isArray(hobbies) &&
-    hobbies.every((item) => typeof item === 'string')
-  ) {
+export const createUser = (body: User): ServerAnswer => {
+
+  if (isValidBody(body)) {
     const newUser = {
-      age,
-      username,
-      hobbies,
+      age: body.age,
+      username: body.username,
+      hobbies: body.hobbies,
       id: uuidv4(),
     };
     users.push(newUser);
@@ -54,9 +69,37 @@ export const createUser = ({
       message: JSON.stringify(newUser),
     };
   } else {
-    return {
-      statusCode: 400,
-      message: 'Does not contain required fields',
-    };
+    return errorAnswers.incorrectData;
   }
 };
+
+export const updateUser = (userID: string, body: User) => {
+    if (!validate(userID)) {
+        return errorAnswers.invalidUUID;
+    }
+
+    const userIndex = users.findIndex((user) => user.id === userID);
+
+    if(userIndex === -1) {
+        return errorAnswers.notFound;
+    } 
+
+    if (isValidBody(body)) {
+    const newUser = {
+      age: body.age,
+      username: body.username,
+      hobbies: body.hobbies,
+      id: userID
+    };
+
+    users.splice(userIndex, 1, newUser)
+    return {
+      statusCode: 200,
+      message: 'The data has been updated',
+    };
+  } else {
+    return errorAnswers.incorrectData;
+  }
+
+};
+
