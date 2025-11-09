@@ -11,14 +11,14 @@ const errorAnswers = {
     statusCode: 400,
     message: 'UserId is invalid (not uuid)',
   },
-    incorrectData: {
+  incorrectData: {
     statusCode: 400,
     message: 'Does not contain required fields',
   },
 };
 
 export const isValidBody = (body: RequestBody): boolean => {
-    const { username, age, hobbies } = body;
+  const { username, age, hobbies } = body;
   if (
     username &&
     age &&
@@ -28,10 +28,10 @@ export const isValidBody = (body: RequestBody): boolean => {
     Array.isArray(hobbies) &&
     hobbies.every((item) => typeof item === 'string')
   ) {
-    return true
-  } 
-  return false; 
-}
+    return true;
+  }
+  return false;
+};
 
 export const getUsers = (): ServerAnswer => {
   return {
@@ -55,7 +55,6 @@ export const getUser = (userID: string): ServerAnswer => {
 };
 
 export const createUser = (body: User): ServerAnswer => {
-
   if (isValidBody(body)) {
     const newUser = {
       age: body.age,
@@ -74,25 +73,25 @@ export const createUser = (body: User): ServerAnswer => {
 };
 
 export const updateUser = (userID: string, body: User): ServerAnswer => {
-    if (!validate(userID)) {
-        return errorAnswers.invalidUUID;
-    }
+  if (!validate(userID)) {
+    return errorAnswers.invalidUUID;
+  }
 
-    const userIndex = users.findIndex((user) => user.id === userID);
+  const userIndex = users.findIndex((user) => user.id === userID);
 
-    if(userIndex === -1) {
-        return errorAnswers.notFound;
-    } 
+  if (userIndex === -1) {
+    return errorAnswers.notFound;
+  }
 
-    if (isValidBody(body)) {
+  if (isValidBody(body)) {
     const newUser = {
       age: body.age,
       username: body.username,
       hobbies: body.hobbies,
-      id: userID
+      id: userID,
     };
 
-    users.splice(userIndex, 1, newUser)
+    users.splice(userIndex, 1, newUser);
     return {
       statusCode: 200,
       message: 'The data has been updated',
@@ -100,26 +99,25 @@ export const updateUser = (userID: string, body: User): ServerAnswer => {
   } else {
     return errorAnswers.incorrectData;
   }
-
 };
 
 export const deleteUser = (userID: string): ServerAnswer => {
-    if (!validate(userID)) {
-        return errorAnswers.invalidUUID;
-    }
+  if (!validate(userID)) {
+    return errorAnswers.invalidUUID;
+  }
 
-    const userIndex = users.findIndex((user) => user.id === userID);
+  const userIndex = users.findIndex((user) => user.id === userID);
 
-    if(userIndex === -1) {
-        return errorAnswers.notFound;
-    } 
+  if (userIndex === -1) {
+    return errorAnswers.notFound;
+  }
 
-    users.splice(userIndex, 1);
-    return {
-        statusCode: 204,
-        message: 'The user has been deleted'
-    }
-}
+  users.splice(userIndex, 1);
+  return {
+    statusCode: 204,
+    message: 'The user has been deleted',
+  };
+};
 
 /*
 DELETE api/users/{userId} используется для удаления существующего пользователя из базы данных
