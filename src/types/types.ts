@@ -6,6 +6,6 @@ export type User = {
 };
 
 export type ServerAnswer = {
-  message: string,
-  statusCode: number
-}
+  message: string;
+  statusCode: number;
+};

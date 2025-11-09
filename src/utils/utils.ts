@@ -13,3 +13,11 @@ export const isValidUrl = (method: string, url: string) => {
   }
   return false;
 };
+
+export const parseRequest = (str: string) => {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return {};
+  }
+};

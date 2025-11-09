@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { createServer } from 'node:http';
-import { isValidUrl } from './utils/utils';
-import { getUser, getUsers } from './modules/accessesDb';
+import { isValidUrl, parseRequest } from './utils/utils';
+import { createUser, getUser, getUsers } from './modules/accessesDb';
 import { ServerAnswer } from './types/types';
 
 dotenv.config();
@@ -12,28 +12,37 @@ const server = createServer((req, res) => {
   const { method, url } = req;
   let answer: ServerAnswer = {
     statusCode: 500,
-    message: 'Error'
+    message: 'Error',
   };
+  let body: string = '';
 
-  if (method && url && isValidUrl(method, url)) {
-    const userId = url.split('/')[3];
+  req.on('data', (chunk) => {
+    body += chunk;
+  });
 
-    switch (method) {
-      case 'GET':
-        if(userId) {
-          answer = getUser(userId);
-        } else {
-          answer = getUsers();
-        }
-        break;
-    
-      default:
-        break;
+  req.on('end', () => {
+    if (method && url && isValidUrl(method, url)) {
+      const userId = url.split('/')[3];
+
+      switch (method) {
+        case 'GET':
+          if (userId) {
+            answer = getUser(userId);
+          } else {
+            answer = getUsers();
+          }
+          break;
+        case 'POST':
+          answer = createUser(parseRequest(body));
+          break;
+        default:
+          break;
+      }
     }
-  }
 
-  res.writeHead(answer.statusCode, { 'Content-Type': 'text/plain' });
-  res.end(answer.message);
+    res.writeHead(answer.statusCode, { 'Content-Type': 'text/json' });
+    res.end(answer.message);
+  });
 });
 
 server.listen(PORT, '127.0.0.1', () => {
