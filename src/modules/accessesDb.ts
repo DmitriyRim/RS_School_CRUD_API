@@ -73,7 +73,7 @@ export const createUser = (body: User): ServerAnswer => {
   }
 };
 
-export const updateUser = (userID: string, body: User) => {
+export const updateUser = (userID: string, body: User): ServerAnswer => {
     if (!validate(userID)) {
         return errorAnswers.invalidUUID;
     }
@@ -103,3 +103,27 @@ export const updateUser = (userID: string, body: User) => {
 
 };
 
+export const deleteUser = (userID: string): ServerAnswer => {
+    if (!validate(userID)) {
+        return errorAnswers.invalidUUID;
+    }
+
+    const userIndex = users.findIndex((user) => user.id === userID);
+
+    if(userIndex === -1) {
+        return errorAnswers.notFound;
+    } 
+
+    users.splice(userIndex, 1);
+    return {
+        statusCode: 204,
+        message: 'The user has been deleted'
+    }
+}
+
+/*
+DELETE api/users/{userId} используется для удаления существующего пользователя из базы данных
+Сервер должен ответить кодом status code 204, если запись найдена и удалена
+Сервер должен ответить кодом status code 400 и соответствующим сообщением, если userId недействителен (не uuid).
+Сервер должен ответить кодом status code 404 и соответствующим сообщением, если запись с id === userId не существует
+*/

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { createServer } from 'node:http';
 import { isValidUrl, parseRequest } from './utils/utils';
-import { createUser, getUser, getUsers, updateUser } from './modules/accessesDb';
+import { createUser, deleteUser, getUser, getUsers, updateUser } from './modules/accessesDb';
 import { ServerAnswer } from './types/types';
 
 dotenv.config();
@@ -37,6 +37,9 @@ const server = createServer((req, res) => {
           break;
         case 'PUT':
           answer = updateUser(userId ,parseRequest(body));
+          break;
+        case 'DELETE':
+          answer = deleteUser(userId);
           break;
         default:
           break;
