@@ -1,0 +1,39 @@
+{
+  "name": "rs_school_crud_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:prod": "npx tsc && node dist/index.js",
+    "start:dev": "nodemon",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix"
+  },
+  "nodemonConfig": "nodemon.json",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitriyRim/RS_School_CRUD_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitriyRim/RS_School_CRUD_API/issues"
+  },
+  "homepage": "https://github.com/DmitriyRim/RS_School_CRUD_API#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "nodemon": "^3.1.10",
+    "prettier": "3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "uuid": "^13.0.0"
+  }
+}
